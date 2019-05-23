@@ -1,8 +1,12 @@
 package com.cesarbassani.apprest;
 
 import com.cesarbassani.apprest.domain.Categoria;
+import com.cesarbassani.apprest.domain.Cidade;
+import com.cesarbassani.apprest.domain.Estado;
 import com.cesarbassani.apprest.domain.Produto;
 import com.cesarbassani.apprest.repositories.CategoriaRepository;
+import com.cesarbassani.apprest.repositories.CidadeRepository;
+import com.cesarbassani.apprest.repositories.EstadoRepository;
 import com.cesarbassani.apprest.repositories.ProdutoRepository;
 import com.cesarbassani.apprest.services.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +24,12 @@ public class ApprestApplication implements CommandLineRunner {
 
 	@Autowired
 	private ProdutoRepository produtoRepository;
+
+	@Autowired
+	private EstadoRepository estadoRepository;
+
+	@Autowired
+	private CidadeRepository cidadeRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(ApprestApplication.class, args);
@@ -42,7 +52,19 @@ public class ApprestApplication implements CommandLineRunner {
 		p3.getCategorias().addAll(Arrays.asList(cat1));
 
 		categoriaRepository.saveAll(Arrays.asList(cat1, cat2));
-
 		produtoRepository.saveAll(Arrays.asList(p1, p2, p3));
+
+		Estado est1 = new Estado(null, "Minas Gerais");
+		Estado est2 = new Estado(null, "São Paulo");
+
+		Cidade c1 = new Cidade(null, "Uberlândia", est1);
+		Cidade c2 = new Cidade(null, "São Paulo", est2);
+		Cidade c3 = new Cidade(null, "Campinas", est2);
+
+		est1.getCidades().addAll(Arrays.asList(c1));
+		est2.getCidades().addAll(Arrays.asList(c2, c3));
+
+		estadoRepository.saveAll(Arrays.asList(est1, est2));
+		cidadeRepository.saveAll(Arrays.asList(c1, c2, c3));
 	}
 }
