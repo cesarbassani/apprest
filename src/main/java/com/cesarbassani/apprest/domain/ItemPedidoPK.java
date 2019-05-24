@@ -1,5 +1,6 @@
 package com.cesarbassani.apprest.domain;
 
+
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;

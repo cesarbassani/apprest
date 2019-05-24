@@ -1,7 +1,7 @@
 package com.cesarbassani.apprest.resources;
 
-import com.cesarbassani.apprest.domain.Cliente;
-import com.cesarbassani.apprest.services.ClienteService;
+import com.cesarbassani.apprest.domain.Pedido;
+import com.cesarbassani.apprest.services.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,15 +10,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/clientes")
-public class ClienteResource {
+@RequestMapping(value = "/pedidos")
+public class PedidoResource {
 
     @Autowired
-    private ClienteService ClienteService;
+    private PedidoService PedidoService;
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> find(@PathVariable("id") Integer id) {
-        Cliente obj = ClienteService.buscar(id);
+        Pedido obj = PedidoService.buscar(id);
         return ResponseEntity.ok().body(obj);
     }
 }
