@@ -1,6 +1,7 @@
 package com.cesarbassani.apprest.services;
 
 import com.cesarbassani.apprest.domain.Categoria;
+import com.cesarbassani.apprest.dto.CategoriaDTO;
 import com.cesarbassani.apprest.repositories.CategoriaRepository;
 import com.cesarbassani.apprest.services.exceptions.DataIntegrityException;
 import com.cesarbassani.apprest.services.exceptions.ObjectNotFoundException;
@@ -52,5 +53,9 @@ public class CategoriaService {
     public Page<Categoria> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
         PageRequest pageRequest = new PageRequest(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
         return categoriaRepository.findAll(pageRequest);
+    }
+
+    public Categoria fromDTO(CategoriaDTO objDto) {
+        return new Categoria(objDto.getId(), objDto.getNome());
     }
 }
