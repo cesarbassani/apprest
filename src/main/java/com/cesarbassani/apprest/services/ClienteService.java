@@ -1,13 +1,20 @@
 package com.cesarbassani.apprest.services;
 
-import com.cesarbassani.apprest.domain.Categoria;
 import com.cesarbassani.apprest.domain.Cliente;
-import com.cesarbassani.apprest.repositories.CategoriaRepository;
+import com.cesarbassani.apprest.domain.Cliente;
+import com.cesarbassani.apprest.dto.ClienteDTO;
 import com.cesarbassani.apprest.repositories.ClienteRepository;
+import com.cesarbassani.apprest.repositories.ClienteRepository;
+import com.cesarbassani.apprest.services.exceptions.DataIntegrityException;
 import com.cesarbassani.apprest.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,5 +27,43 @@ public class ClienteService {
         Optional<Cliente> obj = clienteRepository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException(
                 "Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName()));
+    }
+
+    public Cliente insert(Cliente obj) {
+        obj.setId(null);
+        return clienteRepository.save(obj);
+    }
+
+    public Cliente update(Cliente obj) {
+        Cliente newObj = find(obj.getId());
+        updateData(newObj, obj);
+        return clienteRepository.save(newObj);
+    }
+
+    private void updateData(Cliente newObj, Cliente obj) {
+        newObj.setNome(obj.getNome());
+        newObj.setEmail(obj.getEmail());
+    }
+
+    public void delete(Integer id) {
+        find(id);
+        try {
+            clienteRepository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DataIntegrityException("Não é possível excluir porque há entidades relacionadas");
+        }
+    }
+
+    public List<Cliente> findAll() {
+        return clienteRepository.findAll();
+    }
+
+    public Page<Cliente> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
+        PageRequest pageRequest = new PageRequest(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
+        return clienteRepository.findAll(pageRequest);
+    }
+
+    public Cliente fromDTO(ClienteDTO objDto) {
+        return new Cliente(objDto.getId(), objDto.getNome(), objDto.getEmail(), null, null);
     }
 }
